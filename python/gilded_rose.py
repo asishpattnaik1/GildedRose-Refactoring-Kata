@@ -2,37 +2,49 @@
 
 class GildedRose(object):
 
+    #quality constants
+    MAX_QUALITY = 50
+    MIN_QUALITY = 0
+    SULFURAS_QUALITY = 80
+
+    #item constants
+    AGED_BRIE = "Aged Brie"
+    BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+    SULFURAS = "Sulfuras, Hand of Ragnaros"
+
+
+
     def __init__(self, items):
         self.items = items
 
     def update_quality(self):
         for item in self.items:
-            if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert":
-                if item.quality > 0:
-                    if item.name != "Sulfuras, Hand of Ragnaros":
+            if item.name != self.AGED_BRIE and item.name != self.BACKSTAGE_PASSES:
+                if item.quality > self.MIN_QUALITY:
+                    if item.name != self.SULFURAS:
                         item.quality = item.quality - 1
             else:
-                if item.quality < 50:
+                if item.quality < self.MAX_QUALITY:
                     item.quality = item.quality + 1
-                    if item.name == "Backstage passes to a TAFKAL80ETC concert":
+                    if item.name == self.BACKSTAGE_PASSES:
                         if item.sell_in < 11:
-                            if item.quality < 50:
+                            if item.quality < self.MAX_QUALITY:
                                 item.quality = item.quality + 1
                         if item.sell_in < 6:
-                            if item.quality < 50:
+                            if item.quality < self.MAX_QUALITY:
                                 item.quality = item.quality + 1
-            if item.name != "Sulfuras, Hand of Ragnaros":
+            if item.name != self.SULFURAS:
                 item.sell_in = item.sell_in - 1
             if item.sell_in < 0:
-                if item.name != "Aged Brie":
-                    if item.name != "Backstage passes to a TAFKAL80ETC concert":
-                        if item.quality > 0:
-                            if item.name != "Sulfuras, Hand of Ragnaros":
+                if item.name != self.AGED_BRIE:
+                    if item.name != self.BACKSTAGE_PASSES:
+                        if item.quality > self.MIN_QUALITY:
+                            if item.name != self.SULFURAS:
                                 item.quality = item.quality - 1
                     else:
                         item.quality = item.quality - item.quality
                 else:
-                    if item.quality < 50:
+                    if item.quality < self.MAX_QUALITY:
                         item.quality = item.quality + 1
 
 
