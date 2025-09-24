@@ -20,35 +20,54 @@ class GildedRose(object):
 
     def update_quality(self) -> None:
         for item in self.items:
-            if item.name != self.AGED_BRIE and item.name != self.BACKSTAGE_PASSES:
-                if item.quality > self.MIN_QUALITY:
-                    if item.name != self.SULFURAS:
-                        item.quality = item.quality - 1
+            # Skip legendary items (they don't change)
+            if item.name == self.SULFURAS:
+                continue
+                
+            # Decrease sell_in for all non-legendary items
+            item.sell_in -= 1
+            
+            # Update quality based on item type
+            if item.name == self.AGED_BRIE:
+                self._update_aged_brie_quality(item)
+            elif item.name == self.BACKSTAGE_PASSES:
+                self._update_backstage_pass_quality(item)
             else:
-                if item.quality < self.MAX_QUALITY:
-                    item.quality = item.quality + 1
-                    if item.name == self.BACKSTAGE_PASSES:
-                        if item.sell_in < 11:
-                            if item.quality < self.MAX_QUALITY:
-                                item.quality = item.quality + 1
-                        if item.sell_in < 6:
-                            if item.quality < self.MAX_QUALITY:
-                                item.quality = item.quality + 1
-            if item.name != self.SULFURAS:
-                item.sell_in = item.sell_in - 1
-            if item.sell_in < 0:
-                if item.name != self.AGED_BRIE:
-                    if item.name != self.BACKSTAGE_PASSES:
-                        if item.quality > self.MIN_QUALITY:
-                            if item.name != self.SULFURAS:
-                                item.quality = item.quality - 1
-                    else:
-                        item.quality = item.quality - item.quality
-                else:
-                    if item.quality < self.MAX_QUALITY:
-                        item.quality = item.quality + 1
+                self._update_normal_item_quality(item)
+
+    def _update_aged_brie_quality(self, item: 'Item') -> None:
+        """Aged Brie increases in quality as it ages.
+        Quality increases by 1 each day and by 2 after sell date.
+        """
+        if item.quality < self.MAX_QUALITY:
+            item.quality += 1
+        
+            if item.sell_in < 0 and item.quality < self.MAX_QUALITY:
+                item.quality += 1
 
 
+    def _update_backstage_pass_quality(self, item: 'Item') -> None:
+        """Backstage passes increase in quality as concert approaches."""
+        if item.sell_in < 0:
+            # Concert has passed, worthless
+            item.quality = 0
+        elif item.quality < self.MAX_QUALITY:
+            item.quality += 1
+            # Additional increases as concert approaches
+            if item.sell_in < 10 and item.quality < self.MAX_QUALITY:
+                item.quality += 1
+            if item.sell_in < 5 and item.quality < self.MAX_QUALITY:
+                item.quality += 1
+
+    def _update_normal_item_quality(self, item: 'Item') -> None:
+        """Normal items decrease in quality over time.
+        Quality degrades twice as fast after sell date.
+        """
+        if item.quality > self.MIN_QUALITY:
+            item.quality -= 1
+            # Double decrease after sell date
+            if item.sell_in < 0 and item.quality > self.MIN_QUALITY:
+                item.quality -= 1
 class Item:
     def __init__(self, name: str, sell_in: int, quality: int):
         self.name = name
