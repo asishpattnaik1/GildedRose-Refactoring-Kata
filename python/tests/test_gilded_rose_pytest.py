@@ -106,6 +106,14 @@ class TestGildedRose:
         assert item.quality == 0
         assert item.sell_in == -1
 
+    
+    def test_backstage_pass_quality_does_not_exceed_50(self):
+        item = Item("Backstage passes to a TAFKAL80ETC concert", 5, 49)
+        gilded_rose = GildedRose([item])
+        gilded_rose.update_quality()
+        assert item.quality == 50
+
+
     def test_conjured_item_degrades_twice_as_fast(self):
         """Conjured items degrade in quality twice as fast as normal items."""
         item = Item("Conjured Mana Cake", 10, 20)

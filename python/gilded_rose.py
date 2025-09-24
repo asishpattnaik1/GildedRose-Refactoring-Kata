@@ -9,10 +9,10 @@ class GildedRose(object):
     SULFURAS_QUALITY = 80
 
     #item constants
-    AGED_BRIE = "Aged Brie"
-    BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
-    SULFURAS = "Sulfuras, Hand of Ragnaros"
-    CONJURED = "Conjured Mana Cake"
+    # AGED_BRIE = "Aged Brie"
+    # BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+    # SULFURAS = "Sulfuras, Hand of Ragnaros"
+    
 
     def __init__(self, items: list['Item']):
         self.items = items
@@ -20,18 +20,18 @@ class GildedRose(object):
     def update_quality(self) -> None:
         for item in self.items:
             # Skip legendary items (they don't change)
-            if item.name == self.SULFURAS:
+            if "Sulfuras" in item.name:
                 continue
                 
             # Decrease sell_in for all non-legendary items
             item.sell_in -= 1
             
             # Update quality based on item type
-            if item.name == self.AGED_BRIE:
+            if "Aged Brie" in item.name:
                 self._update_aged_brie_quality(item)
-            elif item.name == self.BACKSTAGE_PASSES:
+            elif "Backstage passes" in item.name:
                 self._update_backstage_pass_quality(item)
-            elif item.name == self.CONJURED:
+            elif "Conjured" in item.name:
                 self._update_conjured_item_quality(item)
             else:
                 self._update_normal_item_quality(item)
@@ -76,7 +76,7 @@ class GildedRose(object):
             item.quality -= 2
             if item.sell_in < 0 and item.quality > self.MIN_QUALITY:
                 item.quality -= 2
-                
+
 class Item:
     def __init__(self, name: str, sell_in: int, quality: int):
         self.name = name
