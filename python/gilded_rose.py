@@ -12,8 +12,7 @@ class GildedRose(object):
     AGED_BRIE = "Aged Brie"
     BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
     SULFURAS = "Sulfuras, Hand of Ragnaros"
-
-
+    CONJURED = "Conjured Mana Cake"
 
     def __init__(self, items: list['Item']):
         self.items = items
@@ -32,6 +31,8 @@ class GildedRose(object):
                 self._update_aged_brie_quality(item)
             elif item.name == self.BACKSTAGE_PASSES:
                 self._update_backstage_pass_quality(item)
+            elif item.name == self.CONJURED:
+                self._update_conjured_item_quality(item)
             else:
                 self._update_normal_item_quality(item)
 
@@ -68,6 +69,13 @@ class GildedRose(object):
             # Double decrease after sell date
             if item.sell_in < 0 and item.quality > self.MIN_QUALITY:
                 item.quality -= 1
+
+    def _update_conjured_item_quality(self, item: 'Item') -> None:
+        """Conjured items degrade in quality twice as fast as normal items."""
+        if item.quality > self.MIN_QUALITY:
+            item.quality -= 2
+            if item.sell_in < 0 and item.quality > self.MIN_QUALITY:
+                item.quality -= 2
 class Item:
     def __init__(self, name: str, sell_in: int, quality: int):
         self.name = name

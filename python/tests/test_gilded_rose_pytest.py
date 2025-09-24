@@ -106,8 +106,23 @@ class TestGildedRose:
         assert item.quality == 0
         assert item.sell_in == -1
 
-    
+    def test_conjured_item_degrades_twice_as_fast(self):
+        """Conjured items degrade in quality twice as fast as normal items."""
+        item = Item("Conjured Mana Cake", 10, 20)
+        gilded_rose = GildedRose([item])
+        gilded_rose.update_quality()
+        
+        assert item.quality == 18  # Decreased by 2
+        assert item.sell_in == 9
 
+    def test_conjured_item_degrades_twice_as_fast_after_sell_date(self):
+        """Conjured items degrade in quality twice as fast as normal items."""
+        item = Item("Conjured Mana Cake", 0, 20)
+        gilded_rose = GildedRose([item])
+        gilded_rose.update_quality()
+
+        assert item.quality == 16  # Decreased by 4
+        assert item.sell_in == -1
 
 if __name__ == '__main__':
     pytest.main([__file__])
