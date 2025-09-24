@@ -4,7 +4,7 @@ from gilded_rose import GildedRose, Item
 
 
 class TestGildedRose:
-    """Comprehensive test suite for GildedRose functionality."""
+    """Comprehensive Unit testing suite for GildedRose functionality."""
     
     def test_normal_item_quality_decreases(self):
         """Normal items decrease in quality by 1 each day."""
@@ -123,6 +123,30 @@ class TestGildedRose:
 
         assert item.quality == 16  # Decreased by 4
         assert item.sell_in == -1
+
+
+    @pytest.mark.parametrize("days", [1, 5, 10, 30])
+    def test_extended_simulation(self, days):
+        """Test extended simulation to ensure no crashes"""
+        items = [
+            Item("Normal Item", 10, 20),
+            Item("Aged Brie", 5, 10),
+            Item("Backstage passes to a TAFKAL80ETC concert", 15, 20),
+            Item("Sulfuras, Hand of Ragnaros", 0, 80),
+            Item("Conjured Mana Cake", 3, 6),
+        ]
+        
+        gilded_rose = GildedRose(items)
+        
+        for _ in range(days):
+            gilded_rose.update_quality()
+            
+            # Ensure quality constraints are maintained
+            for item in items:
+                if item.name != "Sulfuras, Hand of Ragnaros":
+                    assert 0 <= item.quality <= 50
+                else:
+                    assert item.quality == 80
 
 if __name__ == '__main__':
     pytest.main([__file__])

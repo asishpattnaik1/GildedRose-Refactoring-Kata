@@ -76,6 +76,7 @@ class GildedRose(object):
             item.quality -= 2
             if item.sell_in < 0 and item.quality > self.MIN_QUALITY:
                 item.quality -= 2
+                
 class Item:
     def __init__(self, name: str, sell_in: int, quality: int):
         self.name = name
