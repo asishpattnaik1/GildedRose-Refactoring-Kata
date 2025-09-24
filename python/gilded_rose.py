@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import List
 
 class GildedRose(object):
 
@@ -14,10 +15,10 @@ class GildedRose(object):
 
 
 
-    def __init__(self, items):
+    def __init__(self, items: list['Item']):
         self.items = items
 
-    def update_quality(self):
+    def update_quality(self) -> None:
         for item in self.items:
             if item.name != self.AGED_BRIE and item.name != self.BACKSTAGE_PASSES:
                 if item.quality > self.MIN_QUALITY:
@@ -49,10 +50,10 @@ class GildedRose(object):
 
 
 class Item:
-    def __init__(self, name, sell_in, quality):
+    def __init__(self, name: str, sell_in: int, quality: int):
         self.name = name
         self.sell_in = sell_in
         self.quality = quality
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
